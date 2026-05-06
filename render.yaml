@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: scopa-multiplayer
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: "node server/server.js"
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ROOM_TTL_MS
+        value: "21600000"
+      - key: ROOM_IDLE_MS
+        value: "2700000"
+      - key: ROOM_CLEANUP_MS
+        value: "300000"
+      - key: MAX_EVENTS_PER_ROOM
+        value: "500"
+      - key: TURN_TIMEOUT_MS
+        value: "45000"

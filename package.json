@@ -1,0 +1,16 @@
+{
+  "name": "scopa-multiplayer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Separate multiplayer Telegram Mini App version of Scopa.",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "check": "node --check game.js && node --check multiplayer-client.js && node --check shared/scopa-rules.js && node --check server/server.js && node tests/scopa-rules-smoke.js",
+    "smoke:server": "node tests/server-smoke.mjs",
+    "smoke:cleanup": "node tests/cleanup-smoke.mjs",
+    "smoke:timeout": "node tests/timeout-smoke.mjs",
+    "test:two-client": "node tests/two-client-browser.mjs",
+    "build:publish": "node scripts/build-publish.js"
+  }
+}

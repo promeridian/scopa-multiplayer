@@ -1,0 +1,303 @@
+﻿<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#123229">
+    <title>Скопа</title>
+    <link rel="stylesheet" href="./styles.css?v=20260506-04">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  </head>
+  <body>
+    <div class="loading-screen" id="loadingScreen" aria-live="polite">
+      <div class="loading-card">
+        <div class="loading-deck" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <h2>Скопа</h2>
+        <p>Тасуем колоду...</p>
+        <div class="loading-bar"><span></span></div>
+      </div>
+    </div>
+
+    <div class="scopa-celebration" id="scopaCelebration" hidden aria-live="polite">
+      <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+      <div class="scopa-badge">
+        <span>Скопа!</span>
+        <strong id="scopaCelebrationText">Стол очищен</strong>
+      </div>
+    </div>
+
+    <section class="home-screen" id="homeScreen" aria-label="Главный экран">
+      <img class="home-logo" src="./assets/ui/home-logo.png?v=20260505-20" alt="Скопа. Итальянская карточная игра">
+
+      <nav class="home-start-menu" aria-label="Главное меню">
+        <button class="home-play-button" id="quickPlayButton" type="button">Играть</button>
+        <div class="home-secondary-actions">
+          <button class="home-mini-button" id="homeOnlineButton" type="button">Игра по сети</button>
+          <button class="home-mini-button" id="homeFriendButton" type="button">Игра с другом</button>
+        </div>
+        <div class="home-online-stats" id="homeOnlineStats" aria-live="polite">
+          <span class="home-online-dot" aria-hidden="true"></span>
+          <span>Онлайн: <strong>--</strong></span>
+        </div>
+      </nav>
+
+      <nav class="home-dock" aria-label="Быстрые действия">
+        <a class="home-dock-button home-dock-channel" id="homeChannelButton" href="https://t.me/+N-lQ58PBI9ZiMDJi" target="_blank" rel="noopener" aria-label="Telegram-канал">
+          <span>TG</span>
+          <strong>канал</strong>
+        </a>
+        <button class="home-dock-button home-dock-sound" id="homeSoundButton" type="button" aria-label="Настройки звука">
+          <span>&#9835;</span>
+        </button>
+        <button class="home-dock-button home-dock-settings" id="homeSettingsButton" type="button" aria-label="Настройки">
+          <span>&#9881;</span>
+        </button>
+        <button class="home-dock-button home-dock-developers" id="homeDevelopersButton" type="button" aria-label="Разработчики">
+          <span>i</span>
+        </button>
+      </nav>
+    </section>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <button class="top-rules-card" id="topRulesCardButton" type="button" aria-label="Открыть правила">
+          <img src="./assets/ui/rules-card.png?v=20260505-20" alt="" loading="lazy" decoding="async">
+        </button>
+        <div class="top-actions">
+          <button class="icon-button" id="backHomeButton" type="button" aria-label="В главное меню" title="В главное меню">&larr;</button>
+          <button class="icon-button" id="newMatchButton" type="button" aria-label="Новый матч" title="Новый матч">&#8635;</button>
+          <a class="icon-button channel-button" id="channelButton" href="https://t.me/+N-lQ58PBI9ZiMDJi" target="_blank" rel="noopener" aria-label="Наш Telegram-канал" title="Наш Telegram-канал"><span>TG</span></a>
+          <button class="icon-button muted" id="musicButton" type="button" aria-label="Включить музыку" title="Включить музыку">&#9835;</button>
+          <button class="icon-button" id="settingsButton" type="button" aria-label="Настройки" title="Настройки">&#9881;</button>
+        </div>
+        <div class="top-deck" aria-label="Колода">
+          <img src="./assets/cards/back.png?v=20260505-20" alt="" loading="lazy" decoding="async">
+          <strong id="deckCount">40</strong>
+        </div>
+      </header>
+
+      <section class="scoreboard" aria-label="Счет матча">
+        <div class="score score-player">
+          <span>Вы</span>
+          <strong id="playerScore">0</strong>
+        </div>
+        <div class="score score-bot">
+          <span>Бот</span>
+          <strong id="botScore">0</strong>
+        </div>
+      </section>
+
+      <section class="opponent">
+        <img class="game-avatar bot-avatar-ui" src="./assets/ui/bot-avatar.png?v=20260505-20" alt="Бот">
+        <span class="avatar-counter bot-avatar-counter" id="botAvatarCounter">0</span>
+        <div>
+          <span class="section-label">Рука бота</span>
+          <div class="card-backs" id="botHand"></div>
+        </div>
+        <div class="scopa-counter bot-counter">
+          <span>Скопа</span>
+          <strong id="botScopa">0</strong>
+        </div>
+      </section>
+
+      <section class="table-zone" aria-label="Стол">
+        <div class="zone-title">
+          <span class="section-label">Стол</span>
+          <strong id="tableSum">0</strong>
+        </div>
+        <div class="table-cards" id="tableCards"></div>
+      </section>
+
+      <section class="hand-zone" aria-label="Ваша рука">
+        <img class="game-avatar player-avatar-ui" src="./assets/ui/player-avatar.png?v=20260505-20" alt="Игрок">
+        <span class="avatar-counter player-avatar-counter" id="playerAvatarCounter">0</span>
+        <div class="zone-title">
+          <span class="section-label">Ваша рука</span>
+          <div class="scopa-counter player-counter">
+            <span>Скопа</span>
+            <strong id="playerScopa">0</strong>
+          </div>
+          <button class="text-button" id="playButton" type="button" disabled>Положить</button>
+        </div>
+        <div class="hand-cards" id="playerHand"></div>
+        <p class="status" id="statusText">Выберите карту из руки. Потом заберите карты с такой же суммой или положите карту на стол.</p>
+      </section>
+
+      <a class="donate-button" id="donateButton" href="https://t.me/appsmeridian_bot?start=dl-1777825418218" target="_blank" rel="noopener">
+        <span class="donate-icon">&#9733;</span>
+        <span>Поддержать донатом</span>
+      </a>
+
+      <section class="rules-panel" id="rulesPanel" hidden aria-label="Правила игры">
+        <div class="rules-sheet">
+          <div class="rules-header">
+            <div>
+              <p class="eyebrow">Как играть</p>
+              <h2>Правила Скопы</h2>
+            </div>
+            <button class="icon-button" id="closeRulesButton" type="button" aria-label="Закрыть правила">&times;</button>
+          </div>
+
+          <div class="rules-content">
+            <article class="rules-block">
+              <h3>Цель</h3>
+              <p>Забирайте карты со стола картой из руки. Раунд идет до конца колоды, матч играется до 11 очков.</p>
+              <div class="rules-card-row">
+                <img src="./assets/cards/denari-7.png?v=20260505-20" alt="7 пентаклей" loading="lazy" decoding="async">
+                <img src="./assets/cards/coppe-10.png?v=20260505-20" alt="Король кубков" loading="lazy" decoding="async">
+                <img src="./assets/cards/spade-1.png?v=20260505-20" alt="Туз мечей" loading="lazy" decoding="async">
+                <img src="./assets/cards/bastoni-8.png?v=20260505-20" alt="Валет жезлов" loading="lazy" decoding="async">
+              </div>
+            </article>
+
+            <article class="rules-block">
+              <h3>Ход</h3>
+              <p>Если на столе нет одиночной карты нужного значения, можно забрать несколько карт, сумма которых равна вашей карте.</p>
+              <div class="rules-example">
+                <img src="./assets/cards/spade-9.png?v=20260505-20" alt="9 мечей" loading="lazy" decoding="async">
+                <span>=</span>
+                <img src="./assets/cards/denari-2.png?v=20260505-20" alt="2 пентаклей" loading="lazy" decoding="async">
+                <span>+</span>
+                <img src="./assets/cards/coppe-7.png?v=20260505-20" alt="7 кубков" loading="lazy" decoding="async">
+              </div>
+            </article>
+
+            <article class="rules-block">
+              <h3>Важное правило</h3>
+              <p>Если на столе есть одиночная карта нужного значения, нужно брать именно ее, а не комбинацию из нескольких карт.</p>
+              <div class="rules-example">
+                <img src="./assets/cards/bastoni-7.png?v=20260505-20" alt="7 жезлов" loading="lazy" decoding="async">
+                <span>></span>
+                <img src="./assets/cards/denari-7.png?v=20260505-20" alt="7 пентаклей" loading="lazy" decoding="async">
+              </div>
+            </article>
+
+            <article class="rules-block">
+              <h3>Конец раунда</h3>
+              <p>Когда карты в руках и колоде закончились, оставшиеся карты со стола забирает игрок, который сделал последнюю взятку.</p>
+            </article>
+
+            <article class="rules-block">
+              <h3>Очки</h3>
+              <ul>
+                <li>Больше карт за раунд: 1 очко.</li>
+                <li>Больше пентаклей: 1 очко.</li>
+                <li>Сеттебелло, 7 пентаклей: 1 очко.</li>
+                <li>Примьера: 1 очко за лучшие карты по мастям.</li>
+                <li>Скопа: 1 очко за очистку стола.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-panel" id="settingsPanel" hidden aria-label="Настройки игры">
+        <div class="settings-sheet">
+          <div class="rules-header">
+            <div>
+              <p class="eyebrow">Звук</p>
+              <h2>Настройки</h2>
+            </div>
+            <button class="icon-button" id="closeSettingsButton" type="button" aria-label="Закрыть настройки">&times;</button>
+          </div>
+
+          <div class="settings-content">
+            <label class="volume-control">
+              <span>Музыка</span>
+              <input id="musicVolume" type="range" min="0" max="100" value="9">
+              <strong id="musicVolumeValue">9%</strong>
+            </label>
+            <label class="volume-control">
+              <span>Диалоги</span>
+              <input id="voiceVolume" type="range" min="0" max="100" value="65">
+              <strong id="voiceVolumeValue">65%</strong>
+            </label>
+            <label class="volume-control">
+              <span>Игровые звуки</span>
+              <input id="sfxVolume" type="range" min="0" max="100" value="50">
+              <strong id="sfxVolumeValue">50%</strong>
+            </label>
+            <label class="toggle-control">
+              <span>
+                <strong>Вибрация</strong>
+                <small>Для взяток, ошибок, Скопы и победы</small>
+              </span>
+              <input id="vibrationToggle" type="checkbox" checked>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-panel developers-panel" id="developersPanel" hidden aria-label="Разработчики">
+        <div class="settings-sheet developers-sheet">
+          <div class="rules-header">
+            <div>
+              <p class="eyebrow">Команда</p>
+              <h2>Разработчики</h2>
+            </div>
+            <button class="icon-button" id="closeDevelopersButton" type="button" aria-label="Закрыть разработчиков">&times;</button>
+          </div>
+
+          <div class="developers-content">
+            <p><strong>Разработка:</strong> MERIDIAN</p>
+            <p><strong>Тестирование:</strong> Анастасия Непряхина</p>
+            <div>
+              <strong>Озвучка:</strong>
+              <a href="https://www.youtube.com/@YaTakViju" target="_blank" rel="noopener">Вокша</a>
+              <a href="https://www.youtube.com/@wormwoodgnida" target="_blank" rel="noopener">Вормвуд</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-panel support-feature-panel" id="supportFeaturePanel" hidden aria-label="Будущие режимы игры">
+        <div class="settings-sheet developers-sheet">
+          <div class="rules-header">
+            <div>
+              <p class="eyebrow">В разработке</p>
+              <h2>Игра с друзьями</h2>
+            </div>
+            <button class="icon-button" id="closeSupportFeatureButton" type="button" aria-label="Закрыть окно">&times;</button>
+          </div>
+
+          <div class="developers-content">
+            <p>Мы хотим добавить игру по сети и режим для партии с другом, чтобы вы могли играть вместе в Telegram.</p>
+            <ul class="feature-list">
+              <li>Создавать приватную партию и приглашать друга по ссылке в Telegram.</li>
+              <li>Играть с живым соперником вместо бота.</li>
+            </ul>
+            <a class="support-link" href="https://t.me/appsmeridian_bot?start=dl-1777825418218" target="_blank" rel="noopener">Поддержать разработку</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="round-panel" id="roundPanel" hidden>
+        <h2>Раунд завершен</h2>
+        <div class="round-grid" id="roundBreakdown"></div>
+        <button class="primary-button" id="nextRoundButton" type="button">Следующий раунд</button>
+      </section>
+    </main>
+    <div class="modal-backdrop" id="modalBackdrop" hidden></div>
+
+    <script src="./multiplayer-client.js?v=20260506-04"></script>
+    <script src="./game.js?v=20260506-04"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
